@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package protocol.p2p;
+ 
+enum MessageType{
+    eMT_MouseMove = 0;
+    eMT_MousePress = 1;
+    eMT_MouseRelease = 2;
+    eMT_MouseDoubleClick = 3;
+    eMT_MouseWheel = 4;
+    eMT_KeyboardPress = 5;
+    eMT_KeyboardRelease = 6;
+}
+
+message MouseMoveEvent{
+    float step_x = 1;
+    float step_y = 2;
+}
+
+message MouseButtonStateEvent{
+    int32 button = 1;
+}
+
+message KeyboardEvent{
+    int32 key = 1;
+}

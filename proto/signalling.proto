@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package protocol.signalling;
+
+enum MessageType{
+    eMT_UpdateSessionId = 0;
+    eMT_RemoteRequestConnection = 1;
+    eMT_ReplyConnection = 2;
+    eMT_RequestConnection = 3;
+    eMT_ExchangeSessionDescription = 4;
+    eMT_ExchangeIceCandidate = 5;
+}
+
+message SessionId{
+   string session_id = 1;
+}
+
+message RequestReply{
+   bool request_success = 1;
+}
+
+message SessionDescription{
+    string sdp_type = 1;
+    string sdp = 2;
+}
+
+message IceCandidate{
+    string sdp_mid_name = 1;
+    int32 sdp_mline_index = 2;
+    string sdp = 3;
+}
