@@ -1,5 +1,5 @@
 # RemoteController
-Simple remote controller.
+Simple remote controller using webrtc to exchange framebuffer and control message.
 
 ## Platform
 - Ubuntu 20.04
