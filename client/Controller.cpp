@@ -52,10 +52,8 @@ void Controller::OnMouseMoved(int _nX, int _nY)
     protocol::p2p::MouseMoveEvent kMsg;
     kMsg.set_step_x(fWidthRatio);
     kMsg.set_step_y(fHeightRatio);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
 
-    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseMove, kData);
+    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseMove, &kMsg);
 }
 
 void Controller::OnMousePressed(Qt::MouseButton _eButton)
@@ -65,10 +63,8 @@ void Controller::OnMousePressed(Qt::MouseButton _eButton)
         return;
     protocol::p2p::MouseButtonStateEvent kMsg;
     kMsg.set_button(nSysBtn);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
 
-    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MousePress, kData);
+    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MousePress, &kMsg);
 }
 
 void Controller::OnMouseReleased(Qt::MouseButton _eButton)
@@ -78,10 +74,8 @@ void Controller::OnMouseReleased(Qt::MouseButton _eButton)
         return;
     protocol::p2p::MouseButtonStateEvent kMsg;
     kMsg.set_button(nSysBtn);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
 
-    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseRelease, kData);
+    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseRelease, &kMsg);
 }
 
 void Controller::OnMouseDoubleClicked(Qt::MouseButton _eButton)
@@ -91,40 +85,32 @@ void Controller::OnMouseDoubleClicked(Qt::MouseButton _eButton)
         return;
     protocol::p2p::MouseButtonStateEvent kMsg;
     kMsg.set_button(nSysBtn);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
 
-    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseDoubleClick, kData);
+    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseDoubleClick, &kMsg);
 }
 
 void Controller::OnMouseWheel(QPoint _kAngleDelta)
 {
     protocol::p2p::MouseButtonStateEvent kMsg;
     kMsg.set_button(_kAngleDelta.y() > 0 ? Button4 : Button5);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
 
-    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseDoubleClick, kData);
+    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_MouseDoubleClick, &kMsg);
 }
 
 void Controller::OnKeyPressed(int _nKey)
 {
     protocol::p2p::KeyboardEvent kMsg;
     kMsg.set_key(_nKey);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
 
-    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_KeyboardPress, kData);
+    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_KeyboardPress, &kMsg);
 }
 
 void Controller::OnKeyReleased(int _nKey)
 {
     protocol::p2p::KeyboardEvent kMsg;
     kMsg.set_key(_nKey);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
 
-    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_KeyboardRelease, kData);
+    m_pkRtcClient->SendDataChannelMsg(protocol::p2p::eMT_KeyboardRelease, &kMsg);
 }
 
 int Controller::QtButtonToSysButton(Qt::MouseButton _eButton)

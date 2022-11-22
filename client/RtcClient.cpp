@@ -268,6 +268,21 @@ void RtcClient::SendDataChannelMsg(unsigned short _nMsgType, std::string _kData)
     }
 }
 
+void RtcClient::SendDataChannelMsg(unsigned short _nMsgType, google::protobuf::Message *_kData)
+{
+    size_t nMessageSize = _kData->ByteSizeLong();
+    rtc::CopyOnWriteBuffer kBuffer(nMessageSize + 2);
+    uint8_t *pBuffer = kBuffer.MutableData();
+    *pBuffer = (uint8_t)_nMsgType;
+    *(++pBuffer) = (uint8_t)(_nMsgType>>8);
+    _kData->SerializeToArray(++pBuffer, nMessageSize);
+
+    const webrtc::DataBuffer pkDataBuffer(kBuffer, true);
+    if(!m_pkDataChannel->Send(pkDataBuffer)) {
+        RTC_LOGGER->warn("Send data channel message failed! Type:{}", _nMsgType);
+    }
+}
+
 void RtcClient::OnRtcPeerConnectionStateChange(webrtc::PeerConnectionInterface::PeerConnectionState _nState)
 {
     switch(_nState)
@@ -301,12 +316,10 @@ void RtcClient::OnRtcSetLocalSessionSuccess()
 
     RTC_LOGGER->info("Set local session success. Type:{}, Sdp:{}", kStrSdpType.c_str(), kStrSdp.c_str());
 
-    protocol::signalling::SessionDescription msg;
-    msg.set_sdp_type(kStrSdpType);
-    msg.set_sdp(kStrSdp);
-    std::string data;
-    msg.SerializeToString(&data);
-    emit SendSignalMsg(protocol::signalling::eMT_ExchangeSessionDescription,data);
+    protocol::signalling::SessionDescription kMsg;
+    kMsg.set_sdp_type(kStrSdpType);
+    kMsg.set_sdp(kStrSdp);
+    emit SendSignalMsg(protocol::signalling::eMT_ExchangeSessionDescription, &kMsg);
 }
 
 void RtcClient::OnRtcSetLocalSessionFailed()
@@ -337,13 +350,11 @@ void RtcClient::OnRtcIceCandidateReceived(std::string _kSdpMid, qint32 _nSdpMlin
 {
     RTC_LOGGER->info("Receive ice candidate. SdpMid:{} SdpMlineIndex:{} Sdp:{}", _kSdpMid.c_str(), _nSdpMlineIndex, _kSdp.c_str());
 
-    protocol::signalling::IceCandidate msg;
-    msg.set_sdp_mid_name(_kSdpMid);
-    msg.set_sdp_mline_index(_nSdpMlineIndex);
-    msg.set_sdp(_kSdp);
-    std::string data;
-    msg.SerializeToString(&data);
-    emit SendSignalMsg(protocol::signalling::eMT_ExchangeIceCandidate, data);
+    protocol::signalling::IceCandidate kMsg;
+    kMsg.set_sdp_mid_name(_kSdpMid);
+    kMsg.set_sdp_mline_index(_nSdpMlineIndex);
+    kMsg.set_sdp(_kSdp);
+    emit SendSignalMsg(protocol::signalling::eMT_ExchangeIceCandidate, &kMsg);
 }
 
 void RtcClient::OnRtcOnAddTrack(rtc::scoped_refptr<webrtc::MediaStreamTrackInterface> _pkTrack)

@@ -90,48 +90,50 @@ void MatchClient::OnReadyRead()
     }
 }
 
-void MatchClient::SendMsg(unsigned short _nMsgType, const std::string &data)
+void MatchClient::SendMsg(unsigned short _nMsgType, google::protobuf::Message *_kMsg)
 {
-    unsigned short nMsgSize = 2 + data.length();
+    std::string kData;
+    _kMsg->SerializeToString(&kData);
+
+    unsigned short nMsgSize = 2 + kData.length();
     m_kSocket.write((const char*)&nMsgSize,2);
     m_kSocket.write((const char*)&_nMsgType,2);
-    m_kSocket.write(data.c_str(),data.length());
+    m_kSocket.write(kData.c_str(),kData.length());
 }
 
 void MatchClient::ResolveMsg(QByteArray &_kMsgData)
 {
     //little endian
     unsigned short nType = _kMsgData[0] + (static_cast<unsigned short>(_kMsgData[1])<<8);
-    std::string kData = _kMsgData.mid(2).toStdString();
     switch(nType)
     {
     case protocol::signalling::eMT_UpdateSessionId:{
         protocol::signalling::SessionId msg;
-        msg.ParseFromString(kData);
+        msg.ParseFromArray(_kMsgData.data() + 2, _kMsgData.size() - 2);
         emit UpdateSessionId(msg.session_id());
         break;
     }
     case protocol::signalling::eMT_RemoteRequestConnection:{
         protocol::signalling::SessionId msg;
-        msg.ParseFromString(kData);
+        msg.ParseFromArray(_kMsgData.data() + 2, _kMsgData.size() - 2);
         emit RemoteRequestConnection(msg.session_id());
         break;
     }
     case protocol::signalling::eMT_ReplyConnection:{
         protocol::signalling::RequestReply msg;
-        msg.ParseFromString(kData);
+        msg.ParseFromArray(_kMsgData.data() + 2, _kMsgData.size() - 2);
         emit ReplyConnection(msg.request_success());
         break;
     }
     case protocol::signalling::eMT_ExchangeSessionDescription:{
         protocol::signalling::SessionDescription msg;
-        msg.ParseFromString(kData);
+        msg.ParseFromArray(_kMsgData.data() + 2, _kMsgData.size() - 2);
         emit RemoteSdpReceived(msg.sdp_type(),msg.sdp());
         break;
     }
     case protocol::signalling::eMT_ExchangeIceCandidate:{
         protocol::signalling::IceCandidate msg;
-        msg.ParseFromString(kData);
+        msg.ParseFromArray(_kMsgData.data() + 2, _kMsgData.size() - 2);
         emit RemoteIceCandidateReceived(msg.sdp_mid_name(),msg.sdp_mline_index(),msg.sdp());
         break;
     }

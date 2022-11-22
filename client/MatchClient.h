@@ -24,7 +24,7 @@ public slots:
     void OnDisConnected();
     void OnConnectionError(QAbstractSocket::SocketError socketError);
     void OnSslErrors(const QList<QSslError> &errors);
-    void SendMsg(unsigned short _nMsgType,const std::string &data);
+    void SendMsg(unsigned short _nMsgType, google::protobuf::Message *_kMsg);
 protected:
     QSslSocket m_kSocket;
     QByteArray m_kDataBuffer;

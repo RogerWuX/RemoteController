@@ -97,7 +97,7 @@ signals:
     void RtcDataChannelOnMessage(rtc::CopyOnWriteBuffer _kBuffer);
     void RtcFrameReceived(QImage _kArgbImg);    
 
-    void SendSignalMsg(unsigned short _nMsgType,const std::string &_kData);
+    void SendSignalMsg(unsigned short _nMsgType, google::protobuf::Message *_kData);
     void ErrorHappen();
     void PeerConnected();
     void PeerDisconnected();
@@ -118,6 +118,7 @@ public slots:
     void OnRemoteSdpReceived(const std::string &_kStrSdpType, const std::string &_kStrSdp);
     void OnRemoteIceCandidateReceived(const std::string &_kSdpMid, int32_t _nSdpMlineIndex, const std::string &_kSdp);    
     void SendDataChannelMsg(unsigned short _nMsgType, std::string _kData);
+    void SendDataChannelMsg(unsigned short _nMsgType, google::protobuf::Message *_kData);
 protected:
     bool SetRemoteSdp(const std::string &_kStrSdpType, const std::string &_kStrSdp);
     virtual void OnDataChannelMessage(unsigned short _nMsgType, const std::string &_kData);

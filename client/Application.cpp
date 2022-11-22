@@ -66,9 +66,8 @@ void Application::ConnectToSession(const std::string &_kSessionId)
 
     protocol::signalling::SessionId kMsg;
     kMsg.set_session_id(_kSessionId);
-    std::string kData;
-    kMsg.SerializeToString(&kData);
-    m_pkSignalingClient->SendMsg(protocol::signalling::eMT_RequestConnection, kData);
+
+    m_pkSignalingClient->SendMsg(protocol::signalling::eMT_RequestConnection, &kMsg);
 }
 
 void Application::OnMatchClientError()
