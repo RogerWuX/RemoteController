@@ -19,6 +19,6 @@ target_precompile_headers(MatchServer PRIVATE stdafx.h)
 target_link_libraries(MatchServer PRIVATE /usr/lib/x86_64-linux-gnu/libssl.a)
 target_link_libraries(MatchServer PRIVATE /usr/lib/x86_64-linux-gnu/libcrypto.a -ldl)
 
-target_link_libraries(MatchServer PRIVATE /usr/local/lib/libprotobuf.a)
+target_link_libraries(MatchServer PRIVATE /usr/lib/x86_64-linux-gnu/libprotobuf.a)
 target_link_libraries(MatchServer PRIVATE -pthread)
 
