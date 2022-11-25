@@ -41,6 +41,7 @@ target_precompile_headers(Client PRIVATE stdafx.h)
 target_link_libraries(Client PRIVATE -lXtst)
 target_link_libraries(Client PRIVATE ${CMAKE_SOURCE_DIR}/lib/libwebrtc.a -pthread -lglib-2.0 -ldl -lX11)
 target_link_libraries(Client PRIVATE Qt5::Widgets Qt5::Network)
-target_link_libraries(Client PRIVATE /usr/local/lib/libprotobuf.a)
+target_link_libraries(Client PRIVATE /usr/lib/x86_64-linux-gnu/libprotobuf.a)
+
 
 
